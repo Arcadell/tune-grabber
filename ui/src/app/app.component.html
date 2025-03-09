@@ -1,0 +1,63 @@
+<div class="main">
+    @if (!tuneGrabber.ok()) {
+    <form class="search-form" [formGroup]="tuneSearchForm"
+        (ngSubmit)="tuneSearchForm.valid ? tuneGrabber.search$.next(tuneSearchForm.getRawValue().url!) : null">
+        <input class="inp-search" placeholder="Video url" type="text" formControlName="url">
+        <button class="btn-secondary" type="submit">Search</button>
+    </form>
+
+    <div class="main-content">
+        @if (tuneGrabber.status() == 'loading') {
+        <p>loading...</p>
+        }
+
+        @if (tuneGrabber.status() == 'error') {
+        <p>{{tuneGrabber.error()}}</p>
+        }
+
+        @if (tuneGrabber.tuneMetaData()) {
+        <div class="tune-detail">
+            <img [src]="tuneGrabber.tuneMetaData()?.thumbnail" alt="tune-thumbnail">
+            <h1>{{tuneGrabber.tuneMetaData()?.title}}</h1>
+            <p>{{tuneGrabber.tuneMetaData()?.description}}</p>
+        </div>
+
+        <button (click)="tuneGrabber.ok$.next(true)">Next</button>
+        }
+    </div>
+    } @else if(tuneGrabber.status() != 'downloading' && tuneGrabber.status() != 'downloaded') {
+    <form class="search-form" [formGroup]="spotifySearchForm">
+        <input class="inp-search" placeholder="Search on spotify" type="text" formControlName="searchQuery">
+    </form>
+
+    <div class="main-content">
+        @if (spotifyApi.status() == 'loading') {
+        <p>Loading...</p>
+        }
+
+        @if (spotifyApi.status() == 'error') {
+        <p>{{spotifyApi.error()}}</p>
+        }
+
+        @if (tuneGrabber.status() == 'error') {
+        <p>{{tuneGrabber.error()}}</p>
+        }
+
+        @if (spotifyApi.spotifyMetaData()) {
+        @for (item of spotifyApi.spotifyMetaData()!.tracks.items; track item.id) {
+        <button class="spotify-box" (click)="downloadTrack(item)">
+            <p>{{item.album.name}}</p>
+            @if (item.album.images[0]) {
+            <img [src]="item.album.images[0].url" alt="spotify-thumbnail">
+            }
+        </button>
+        }
+        }
+    </div>
+    } @else if(tuneGrabber.status() == 'downloading') {
+    <p>Downloading...</p>
+    } @else if(tuneGrabber.status() == 'downloaded') {
+    <p>Downloaded 👌</p>
+    <button (click)="refresh()">home</button>
+    }
+</div>
