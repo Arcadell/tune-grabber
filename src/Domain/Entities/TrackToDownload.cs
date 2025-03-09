@@ -11,7 +11,11 @@ namespace Domain.Entities
         public required string Url { get; set; }
         public required string Title { get; set; }
         public required string Album { get; set; }
-        public required List<string> Artist { get; set; }
+        public required string[] Artists { get; set; }
         public required string ImageUrl { get; set; }
+        public required int TrackNumber { get; set; }
+        public required int Year { get; set; }
+        public required string[] Genre { get; set; }
+
     }
 }

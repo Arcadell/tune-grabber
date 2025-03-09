@@ -44,9 +44,12 @@ export class AppComponent {
     const trackToDownload: TrackToDownload = {
       url: this.tuneGrabber.tuneMetaData()?.url!,
       album: item.album.name,
-      artist: item.artists.map((x) => x.name),
+      artists: item.artists.map((x) => x.name),
       title: item.name,
       imageUrl: item.album.images[0].url,
+      genre: [],
+      trackNumber: item.track_number,
+      year: Number(item.album.release_date.split('-')[0])
     }
 
     this.tuneGrabber.download$.next(trackToDownload);

@@ -23,6 +23,8 @@ namespace Application.Services
                 {
                     Console.WriteLine(item);
                 }
+
+                throw new Exception("Video meta data is null");
             }
 
             var videoMetaData = new VideoMetaData();
@@ -52,6 +54,10 @@ namespace Application.Services
                 await SetAlbumArt(spotifyMetaData.ImageUrl, file);
                 file.Tag.Title = spotifyMetaData.Title;
                 file.Tag.Album = spotifyMetaData.Album;
+                file.Tag.Performers = spotifyMetaData.Artists;
+                file.Tag.Track = (uint)spotifyMetaData.TrackNumber;
+                file.Tag.Year = (uint)spotifyMetaData.Year;
+                file.Tag.Genres = spotifyMetaData.Genre;
 
                 file.Save();
 
